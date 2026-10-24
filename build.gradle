@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+    // Plugin de Allure moderno
+    id 'io.qameta.allure' version '4.3.0'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+// Configuración obligatoria para el Plugin de Allure 4.3.0 cuando se usa JUnit 5 (Allure Java 2)
+allure {
+    adapter {
+        allureJavaVersion = "2.29.0"
+    }
+}
+
+dependencies {
+    // 1. Plataforma unificada de JUnit 5
+    testImplementation platform('org.junit:junit-bom:5.13.0')
+
+    // 2. Componentes base de JUnit (Las versiones se administran solas gracias al BOM)
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // 3. Frameworks de Automatización
+    testImplementation 'io.rest-assured:rest-assured:6.1.0'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.25.0'
+
+    // Nota: Quitamos "allure-jupiter" manual de aquí, ya que el plugin "io.qameta.allure"
+    // se encarga de inyectarlo limpiamente de forma automática en base al bloque 'allure' de arriba.
+}
+
+test {
+    useJUnitPlatform()
+}
